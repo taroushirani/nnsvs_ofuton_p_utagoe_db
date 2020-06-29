@@ -21,6 +21,9 @@ Due to the licensing issue, this recipe does not include data nor helper scripts
 
 The directory structure made by this recipe is the same as kiritan_singing does.
 
+## Sample code
+- [Jupyter Notebook(Google Colaboratory, comments are written in Japanese)(https://gist.github.com/taroushirani/c94e6c4db059cc46abb5ab6d33aa885d)
+
 ## Resources
 
 - おふとんP歌声DB配布所: https://sites.google.com/view/oftn-utagoedb/%E3%83%9B%E3%83%BC%E3%83%A0 (Japanese)
