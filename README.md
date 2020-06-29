@@ -4,6 +4,7 @@
 Almost all codes are derived from [kiritan_singing](https://github.com/r9y9/kiritan_singing).
 
 ## Requirements
+- nnsvs
 - pysinsy
 - nnmnkwii
 - librosa
@@ -14,11 +15,11 @@ Almost all codes are derived from [kiritan_singing](https://github.com/r9y9/kiri
 - jaconv
 
 ## How to use
-Due to the licensing issue, this recipe does not include data nor a helper script for downloading automatically. First of all, you need to get OFUTON_P_UTAGOE_DB.zip from [おふとんP歌声DB配布所](https://sites.google.com/view/oftn-utagoedb/%E3%83%9B%E3%83%BC%E3%83%A0) (the terms of service are written in Japanese). Next, please clone this repository under your `nnsvs/egs` directory and change `db_root` in `00-svs-world/run.sh`. Then please run:
+Due to the licensing issue, this recipe does not include data nor helper scripts for downloading automatically. First of all, you need to get OFUTON_P_UTAGOE_DB.zip from [おふとんP歌声DB配布所](https://sites.google.com/view/oftn-utagoedb/%E3%83%9B%E3%83%BC%E3%83%A0) (the terms of service are written in Japanese). Next, clone this repository and change `db_root` in `00-svs-world/run.sh` according to your environment. Then move to `00-svs-world` directory and run:
 
     run.sh
 
-The directory structure made by this recipe is the same is as kiritan_singing does.
+The directory structure made by this recipe is the same as kiritan_singing does.
 
 ## Resources
 
