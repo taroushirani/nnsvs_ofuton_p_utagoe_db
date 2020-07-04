@@ -88,8 +88,10 @@ if [ ${stage} -le 1 ] && [ ${stop_stage} -ge 1 ]; then
     do
 	# OFUTON_P_UTAGOE_DB
 	# Max frequency: 349.2282314330038, Min frequency: 82.40688922821738
+	# (Max frequency: 349.2282314330038, Min frequency: 109.99999999999989
+	#  without *_low data)
       nnsvs-prepare-features utt_list=data/list/$s.list out_dir=$dump_org_dir/$s/  \
-        question_path=$question_path acoustic.f0_floor=70 acoustic.f0_ceil=390
+        question_path=$question_path acoustic.f0_floor=80 acoustic.f0_ceil=390
     done
 
     # Compute normalization stats for each input/output
