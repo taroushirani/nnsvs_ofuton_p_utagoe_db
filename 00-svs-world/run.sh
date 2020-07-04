@@ -75,7 +75,7 @@ if [ ${stage} -le 0 ] && [ ${stop_stage} -ge 0 ]; then
 
     echo "train/dev/eval split"
     find data/acoustic/ -type f -name "*.wav" -exec basename {} .wav \; \
-        | sort > data/list/utt_list.txt
+        grep -v _low | sort > data/list/utt_list.txt
     grep haruga_kita_ data/list/utt_list.txt > data/list/$eval_set.list
     grep kagome_kagome_ data/list/utt_list.txt > data/list/$dev_set.list
     grep -v haruga_kita_ data/list/utt_list.txt | grep -v kagome_kagome_ > data/list/$train_set.list
