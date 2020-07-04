@@ -193,7 +193,7 @@ for base in tqdm(base_files):
 #    print(wav_path)
 
     # workaround for wrong wav_path
-    if "shoujoujino_tanukibayashi" in wav_path:
+    if "shoujoujino_tanukibayashi" in wav_path and exists(wav_path) == False:
         wav_path = join(config.db_root, "shoujoujino_tanikibayashi", f"{utt_id}.wav")
 
 #    print(wav_path)   
