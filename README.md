@@ -1,6 +1,6 @@
 # nnsvs_ofuton_p_utagoe_db
 
-[NN-SVS](https://github.com/r9y9/nnsvs) recipe of OFUTON_P singing voice database (49 songs, original 46 songs + 3 key-changed songs). 
+[NNSVS](https://github.com/r9y9/nnsvs) recipe of OFUTON_P singing voice database (49 songs, 46 original songs + 3 key-changed songs). 
 Almost all codes are derived from [kiritan_singing](https://github.com/r9y9/kiritan_singing).
 
 ## Requirements
@@ -22,7 +22,7 @@ Due to the licensing issue, this recipe does not include data nor helper scripts
 The directory structure made by this recipe is the same as kiritan_singing does.
 
 ## Sample code
-- [Jupyter Notebook](https://gist.github.com/taroushirani/c94e6c4db059cc46abb5ab6d33aa885d) (Google Colaboratory, comments are written in Japanese)
+- [Jupyter Notebook](https://gist.github.com/taroushirani/987211cc4023eab174b71bfe7041fd95) (Google Colaboratory, comments are written in Japanese)
 
 ## Resources
 
