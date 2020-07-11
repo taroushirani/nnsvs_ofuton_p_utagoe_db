@@ -201,6 +201,9 @@ for base in tqdm(base_files):
     # sr, wave = wavfile.read(wav_path)
     wav, sr = librosa.load(wav_path, sr=48000)
 
+    # gain normalize
+    wav = wav / wav.max() * 0.99
+    
     seg_idx = 0
     while True:
         lab_align_path = join(full_align_dir, f"{utt_id}_seg{seg_idx}.lab")

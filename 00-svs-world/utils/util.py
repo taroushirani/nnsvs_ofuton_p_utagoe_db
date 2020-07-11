@@ -1,6 +1,8 @@
 # coding: utf-8
+from os.path import join
 import jaconv
 import numpy as np
+import config
 from nnmnkwii.io import hts
 
 def merge_sil(lab):
@@ -144,13 +146,13 @@ def segment_labels(lab, strict=True, threshold=1.0, min_duration=5.0,
 
 def prep_ph2num():
     kiritan_phone_mapping = {}
-    with open("./dic/japanese.table") as f:
+    with open(join(config.sinsy_dic, "japanese.table")) as f:
         for l in f:
             s = l.strip().split()
             key = jaconv.hira2kata(s[0])
             kiritan_phone_mapping[key] = s[1:]
     sinsy_phone_mapping = {}
-    with open("./dic/japanese.utf_8.table") as f:
+    with open(join(config.sinsy_dic, "japanese.utf_8.table")) as f:
         for l in f:
             s = l.strip().split()
             key = jaconv.hira2kata(s[0])
@@ -213,7 +215,11 @@ def get_note_indices(lab):
             pass
     return note_indices
 
-def fix_mono_lab(lab):
+def fix_mono_lab_before_align(lab):
+    # There is nothing to do
+    return lab
+              
+def fix_mono_lab_after_align(lab):
     f = hts.HTSLabelFile()
     f.append(lab[0])
     for i in range(1, len(lab)):
