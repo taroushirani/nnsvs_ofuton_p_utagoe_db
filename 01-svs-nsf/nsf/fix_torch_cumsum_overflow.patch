@@ -1,0 +1,50 @@
+diff --git a/project/hn-nsf/model.py b/project/hn-nsf/model.py
+index 59aa89b..b6e736f 100644
+--- a/project/hn-nsf/model.py
++++ b/project/hn-nsf/model.py
+@@ -290,7 +290,19 @@ class SineGen(torch_nn.Module):
+         # instantanouse phase sine[t] = sin(2*pi \sum_i=1 ^{t} rad)
+         if not self.flag_for_pulse:
+             # for normal case
+-            sines = torch.sin(torch.cumsum(rad_values, dim=1) *2*np.pi)
++
++            # To prevent torch.cumsum numerical overflow,
++            # it is necessary to add -1 whenever \sum_k=1^n rad_value_k > 1.
++            # Buffer tmp_over_one_idx indicates the time step to add -1.
++            # This will not change F0 of sine because (x-1) * 2*pi = x *2*pi
++            tmp_over_one = torch.cumsum(rad_values, 1) % 1
++            tmp_over_one_idx = (tmp_over_one[:, 1:, :] - 
++                                tmp_over_one[:, :-1, :]) < 0
++            cumsum_shift = torch.zeros_like(rad_values)
++            cumsum_shift[:, 1:, :] = tmp_over_one_idx * -1.0
++
++            sines = torch.sin(torch.cumsum(rad_values + cumsum_shift, dim=1) 
++                              * 2 * np.pi)            
+         else:
+             # If necessary, make sure that the first time step of every 
+             # voiced segments is sin(pi) or cos(0)
+diff --git a/project/hn-sinc-nsf-9/model.py b/project/hn-sinc-nsf-9/model.py
+index de03567..cc14623 100644
+--- a/project/hn-sinc-nsf-9/model.py
++++ b/project/hn-sinc-nsf-9/model.py
+@@ -472,7 +472,19 @@ class SineGen(torch_nn.Module):
+         # instantanouse phase sine[t] = sin(2*pi \sum_i=1 ^{t} rad)
+         if not self.flag_for_pulse:
+             # for normal case
+-            sines = torch.sin(torch.cumsum(rad_values, dim=1) *2*np.pi)
++
++            # To prevent torch.cumsum numerical overflow,
++            # it is necessary to add -1 whenever \sum_k=1^n rad_value_k > 1.
++            # Buffer tmp_over_one_idx indicates the time step to add -1.
++            # This will not change F0 of sine because (x-1) * 2*pi = x *2*pi
++            tmp_over_one = torch.cumsum(rad_values, 1) % 1
++            tmp_over_one_idx = (tmp_over_one[:, 1:, :] - 
++                                tmp_over_one[:, :-1, :]) < 0
++            cumsum_shift = torch.zeros_like(rad_values)
++            cumsum_shift[:, 1:, :] = tmp_over_one_idx * -1.0
++
++            sines = torch.sin(torch.cumsum(rad_values + cumsum_shift, dim=1) 
++                              * 2 * np.pi)            
+         else:
+             # If necessary, make sure that the first time step of every 
+             # voiced segments is sin(pi) or cos(0)
