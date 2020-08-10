@@ -69,9 +69,6 @@ if [ ${stage} -le 0 ] && [ ${stop_stage} -ge 0 ]; then
     echo "db_root = \"$db_root\"" >> config.py
     sh utils/data_prep.sh
     mkdir -p data/list
-    ln -sfn $PWD/ofuton_p_utagoe_db/timelag data/timelag
-    ln -sfn $PWD/ofuton_p_utagoe_db/duration data/duration
-    ln -sfn $PWD/ofuton_p_utagoe_db/acoustic data/acoustic
 
     echo "train/dev/eval split"
     find data/acoustic/ -type f -name "*.wav" -exec basename {} .wav \; \
