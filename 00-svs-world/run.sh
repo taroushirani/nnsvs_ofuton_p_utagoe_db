@@ -5,7 +5,7 @@ NNSVS_ROOT=$script_dir/../../../
 
 # Directory
 # **CHANGE** this to your database path
-db_root=$HOME/data/OFUTON_P_UTAGOE_DB/
+db_root=$HOME/data/OFUTON_P_UTAGOE_DB_no_br
 
 spk="ofuton_p"
 

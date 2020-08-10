@@ -5,7 +5,7 @@ from glob import glob
 from os.path import join, basename, splitext
 from nnmnkwii.io import hts
 import config
-from util import merge_sil
+from util import merge_sil, fix_mono_lab_before_align
 
 sinsy = pysinsy.sinsy.Sinsy()
 
@@ -35,7 +35,7 @@ os.makedirs(dst_dir, exist_ok=True)
 for m in files:
     f = hts.load(m)
     with open(join(dst_dir, basename(m)), "w") as of:
-        of.write(str(f))
+        of.write(str(fix_mono_lab_before_align(f)))
 
 # Rounding
 for name in ["sinsy_mono", "sinsy_full", "mono_label"]:

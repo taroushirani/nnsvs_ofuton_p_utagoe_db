@@ -213,7 +213,18 @@ def get_note_indices(lab):
             pass
     return note_indices
 
-def fix_mono_lab(lab):
+def fix_mono_lab_before_align(lab):
+    f = hts.HTSLabelFile()
+    f.append(lab[0])
+    for i in range(1, len(lab)):
+        if(lab.contexts[i] == "br"):
+            # ignore br and extend the last phoneme to the next phoneme of "br"
+            f.end_times[-1] = lab.end_times[i]
+        else:        
+            f.append(lab[i], strict=False)
+    return(f)
+
+def fix_mono_lab_after_align(lab):
     f = hts.HTSLabelFile()
     f.append(lab[0])
     for i in range(1, len(lab)):

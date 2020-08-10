@@ -2,6 +2,7 @@
 
 script_dir=$(cd $(dirname ${BASH_SOURCE:-$0}); pwd)
 PYTHONPATH=$script_dir/../:$PYTHONPATH
+export PYTHONPATH
 
 # Step 1:
 # Generate full-context lables from music xml using pysinsy

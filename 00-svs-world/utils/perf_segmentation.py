@@ -4,7 +4,7 @@ from glob import glob
 from os.path import join, basename, splitext
 from nnmnkwii.io import hts
 import sys
-from util import segment_labels, trim_sil_and_pau, compute_nosil_duration, fix_mono_lab
+from util import segment_labels, trim_sil_and_pau, compute_nosil_duration
 import config
 
 
@@ -15,7 +15,7 @@ dst_dir = join(config.out_dir, "full_dtw")
 os.makedirs(dst_dir, exist_ok=True)
 
 for mono, full in zip(mono_files, full_files):
-    m, f = fix_mono_lab(hts.load(mono)), hts.load(full)
+    m, f = hts.load(mono), hts.load(full)
     assert len(m) == len(f)
     f.start_times = m.start_times
     f.end_times = m.end_times
