@@ -273,10 +273,7 @@ if [ ${stage} -le 9 ] && [ ${stop_stage} -ge 9 ]; then
     mkdir -p $nsf_save_model_dir
     xrun python bin/train_nsf.py \
 	 nsf_root_dir=$nsf_root_dir \
-	 nsf_type=hn-sinc-nsf \
-	 nsf.args.batch_size=1 \
 	 nsf.args.epochs=100 \
-	 nsf.args.no_best_epochs=5 \
 	 nsf.args.lr=0.00003 \
 	 nsf.args.save_model_dir=$nsf_save_model_dir \
 	 nsf.args.trained_model=$nsf_pretrained_model \
@@ -297,8 +294,6 @@ if [ ${stage} -le 10 ] && [ ${stop_stage} -ge 10 ]; then
     mkdir -p $test_output_dirs
     xrun python bin/train_nsf.py \
 	 nsf_root_dir=$nsf_root_dir \
-	 nsf_type=hn-sinc-nsf \
-	 nsf.args.batch_size=1 \
 	 nsf.args.save_model_dir=$nsf_save_model_dir \
 	 nsf.args.trained_model=$nsf_pretrained_model \
 	 nsf.args.inference=true \

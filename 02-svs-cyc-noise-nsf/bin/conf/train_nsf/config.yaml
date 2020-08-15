@@ -5,7 +5,7 @@ defaults:
 verbose: 100
 
 nsf_root_dir:
-nsf_type: hn-sinc-nsf
+nsf_type: cyc-noise-nsf
   
 data:
   #training set

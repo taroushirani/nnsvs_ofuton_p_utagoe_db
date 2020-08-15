@@ -66,7 +66,8 @@ acoustic_model_out_dim=187
 
 nsf_root_dir=downloads/project-NN-Pytorch-scripts/
 nsf_save_model_dir=$expdir/nsf/train_outputs
-nsf_pretrained_model=nsf/trained_network_cmu_arctic_20200728.pt
+nsf_pretrained_model=nsf/trained_network_cyc_noise_nsf_cmu_arctic_corpus_20200815.pt
+#nsf_pretrained_model=
 
 if [ ${stage} -le -1 ] && [ ${stop_stage} -ge -1 ]; then
     if [ ! -e $db_root ]; then
@@ -229,8 +230,7 @@ if [ ${stage} -le 6 ] && [ ${stop_stage} -ge 6 ]; then
             out_dir=$expdir/synthesis/$s/latest/$input \
             ground_truth_duration=$ground_truth_duration \
 	    nsf_root_dir=downloads/project-NN-Pytorch-scripts/ \
-	    nsf.args.save_model_dir=$nsf_save_model_dir \
-            nsf.args.trained_model=$nsf_pretrained_model
+	    nsf.args.save_model_dir=$nsf_save_model_dir 
         done
     done
 fi
@@ -241,7 +241,6 @@ if [ ${stage} -le 7 ] && [ ${stop_stage} -ge 7 ]; then
         mkdir -p downloads
         cd downloads
 	git clone https://github.com/nii-yamagishilab/project-NN-Pytorch-scripts
-	patch -p1 < ../nsf/nsf/fix_torch_cumsum_overflow.patch
 	cd $script_dir
     fi
 fi
@@ -273,11 +272,6 @@ if [ ${stage} -le 9 ] && [ ${stop_stage} -ge 9 ]; then
     mkdir -p $nsf_save_model_dir
     xrun python bin/train_nsf.py \
 	 nsf_root_dir=$nsf_root_dir \
-	 nsf_type=hn-sinc-nsf \
-	 nsf.args.batch_size=1 \
-	 nsf.args.epochs=100 \
-	 nsf.args.no_best_epochs=5 \
-	 nsf.args.lr=0.00003 \
 	 nsf.args.save_model_dir=$nsf_save_model_dir \
 	 nsf.args.trained_model=$nsf_pretrained_model \
 	 nsf.model.input_dirs=["$input_dirs","$input_dirs","$input_dirs"]\
@@ -297,7 +291,6 @@ if [ ${stage} -le 10 ] && [ ${stop_stage} -ge 10 ]; then
     mkdir -p $test_output_dirs
     xrun python bin/train_nsf.py \
 	 nsf_root_dir=$nsf_root_dir \
-	 nsf_type=hn-sinc-nsf \
 	 nsf.args.batch_size=1 \
 	 nsf.args.save_model_dir=$nsf_save_model_dir \
 	 nsf.args.trained_model=$nsf_pretrained_model \

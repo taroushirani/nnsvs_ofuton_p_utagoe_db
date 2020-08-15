@@ -41,6 +41,3 @@ timelag_allowed_range_rest = (-40, 39)
 
 # Sample rate
 sample_rate=16000
-db_root = "/mnt/d/wslhome/tyuyu/data/OFUTON_P_UTAGOE_DB/"
-db_root = "/mnt/d/wslhome/tyuyu/data/OFUTON_P_UTAGOE_DB/"
-db_root = "/mnt/d/wslhome/tyuyu/data/OFUTON_P_UTAGOE_DB/"
