@@ -229,8 +229,7 @@ if [ ${stage} -le 6 ] && [ ${stop_stage} -ge 6 ]; then
             out_dir=$expdir/synthesis/$s/latest/$input \
             ground_truth_duration=$ground_truth_duration \
 	    nsf_root_dir=downloads/project-NN-Pytorch-scripts/ \
-	    nsf.args.save_model_dir=$nsf_save_model_dir \
-            nsf.args.trained_model=$nsf_pretrained_model
+	    nsf.args.save_model_dir=$nsf_save_model_dir
         done
     done
 fi
@@ -295,7 +294,6 @@ if [ ${stage} -le 10 ] && [ ${stop_stage} -ge 10 ]; then
     xrun python bin/train_nsf.py \
 	 nsf_root_dir=$nsf_root_dir \
 	 nsf.args.save_model_dir=$nsf_save_model_dir \
-	 nsf.args.trained_model=$nsf_pretrained_model \
 	 nsf.args.inference=true \
 	 nsf.model.test_input_dirs=["$test_input_dirs","$test_input_dirs","$test_input_dirs"]\
 	 nsf.model.test_output_dirs=$test_output_dirs
