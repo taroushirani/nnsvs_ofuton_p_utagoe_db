@@ -66,7 +66,8 @@ acoustic_model_out_dim=187
 
 nsf_root_dir=downloads/project-NN-Pytorch-scripts/
 nsf_save_model_dir=$expdir/nsf/train_outputs
-nsf_pretrained_model=nsf/trained_network_cyc_noise_nsf_cmu_arctic_corpus_20200815.pt
+#nsf_pretrained_model=nsf/trained_network_cyc_noise_nsf_cmu_arctic_corpus_20200815.pt
+nsf_pretrained_model=nsf/trained_network_cyc_noise_nsf_adapted_from_cmu_arctic_corpus_20200816_4.pt
 
 if [ ${stage} -le -1 ] && [ ${stop_stage} -ge -1 ]; then
     if [ ! -e $db_root ]; then
@@ -210,6 +211,7 @@ if [ ${stage} -le 6 ] && [ ${stop_stage} -ge 6 ]; then
             else
                 ground_truth_duration=true
             fi
+
             xrun python bin/synthesis_nsf.py question_path=conf/jp_qst001_nnsvs.hed \
             timelag.checkpoint=$expdir/timelag/latest.pth \
             timelag.in_scaler_path=$dump_norm_dir/in_timelag_scaler.joblib \
@@ -264,20 +266,34 @@ if [ ${stage} -le 9 ] && [ ${stop_stage} -ge 9 ]; then
 	echo "No NSF files found. Please set nsf_root_dir properly or run stage 7."
 	exit 1
     fi
-
+    echo "learning_rate=0.00003"
     input_dirs=$expdir/nsf/input_dirs
     output_dirs=$expdir/nsf/output_dirs
     mkdir -p $output_dirs
     mkdir -p $nsf_save_model_dir
     xrun python bin/train_nsf.py \
 	 nsf_root_dir=$nsf_root_dir \
-	 nsf.args.epochs=100 \
-	 nsf.args.no_best_epochs=10 \
+	 nsf.args.epochs=200 \
+	 nsf.args.no_best_epochs=20 \
 	 nsf.args.lr=0.00003 \
 	 nsf.args.save_model_dir=$nsf_save_model_dir \
 	 nsf.args.trained_model=$nsf_pretrained_model \
 	 nsf.model.input_dirs=["$input_dirs","$input_dirs","$input_dirs"]\
 	 nsf.model.output_dirs=["$output_dirs"]
+
+    for lr in 0.00001 0.000006 0.000003 0.000001
+    do
+	echo "learning_rate=$lr"
+	xrun python bin/train_nsf.py \
+	     nsf_root_dir=$nsf_root_dir \
+	     nsf.args.epochs=200 \
+	     nsf.args.no_best_epochs=20 \
+	     nsf.args.lr=$lr \
+	     nsf.args.save_model_dir=$nsf_save_model_dir \
+	     nsf.args.trained_model=$expdir/nsf/train_outputs/trained_network.pt \
+	     nsf.model.input_dirs=["$input_dirs","$input_dirs","$input_dirs"]\
+	     nsf.model.output_dirs=["$output_dirs"]
+    done
 fi
 
 if [ ${stage} -le 10 ] && [ ${stop_stage} -ge 10 ]; then
