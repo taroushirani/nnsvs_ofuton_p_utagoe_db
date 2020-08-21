@@ -5,7 +5,7 @@ from os.path import join, expanduser
 # Output directory
 # All the igenerated labels, intermediate files, and segmented wav files
 # will be saved in the following directory
-out_dir = "ofuton_p_utagoe_db"
+out_dir = "data"
 
 # PLEASE CHANGE THE PATH BASED ON YOUR ENVIRONMENT
 db_root = join(expanduser("~"), "data/OFUTON_P_UTAGOE_DB/")
