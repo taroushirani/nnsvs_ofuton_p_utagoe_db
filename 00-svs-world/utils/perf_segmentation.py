@@ -5,16 +5,19 @@ from os.path import join, basename, splitext
 from nnmnkwii.io import hts
 import sys
 from util import segment_labels, trim_sil_and_pau, compute_nosil_duration
-import config
+from tqdm import tqdm
 
+import yaml
+with open('config.yaml', 'r') as yml:
+    config = yaml.load(yml, Loader=yaml.FullLoader)
 
 # copy mono alignments to full
-mono_files = sorted(glob(join(config.out_dir, "mono_dtw", "*.lab")))
-full_files = sorted(glob(join(config.out_dir, "sinsy_full_round", "*.lab")))
-dst_dir = join(config.out_dir, "full_dtw")
+mono_files = sorted(glob(join(config["out_dir"], "mono_dtw", "*.lab")))
+full_files = sorted(glob(join(config["out_dir"], "sinsy_full_round", "*.lab")))
+dst_dir = join(config["out_dir"], "full_dtw")
 os.makedirs(dst_dir, exist_ok=True)
 
-for mono, full in zip(mono_files, full_files):
+for mono, full in tqdm(zip(mono_files, full_files)):
     m, f = hts.load(mono), hts.load(full)
     assert len(m) == len(f)
     f.start_times = m.start_times
@@ -25,19 +28,19 @@ for mono, full in zip(mono_files, full_files):
 
 
 # segmentation
-base_files = sorted(glob(join(config.out_dir, "mono_dtw", "*.lab")))
+base_files = sorted(glob(join(config["out_dir"], "mono_dtw", "*.lab")))
 
 lengths = {}
 
 for name in ["full_dtw", "sinsy_full_round", "sinsy_mono_round"]:
-    files = sorted(glob(join(config.out_dir, name, "*.lab")))
-    for idx, base in enumerate(base_files):
+    files = sorted(glob(join(config["out_dir"], name, "*.lab")))
+    for idx, base in tqdm(enumerate(base_files)):
         utt_id = splitext(basename(base))[0]
         base_lab = hts.load(base)
         base_segments, start_indices, end_indices = segment_labels(
-            base_lab, True, config.segmentation_threshold,
-            min_duration=config.segment_min_duration,
-            force_split_threshold=config.force_split_threshold)
+            base_lab, True, config["segmentation_threshold"],
+            min_duration=config["segment_min_duration"],
+            force_split_threshold=config["force_split_threshold"])
         if name == "full_dtw":
             d = []
             for seg in base_segments:
@@ -52,13 +55,13 @@ for name in ["full_dtw", "sinsy_full_round", "sinsy_mono_round"]:
         for s,e in zip(start_indices, end_indices):
             segments.append(lab[s:e+1])
 
-        dst_dir = join(config.out_dir, f"{name}_seg")
+        dst_dir = join(config["out_dir"], f"{name}_seg")
         os.makedirs(dst_dir, exist_ok=True)
         for idx, seg in enumerate(segments):
             with open(join(dst_dir, f"{utt_id}_seg{idx}.lab"), "w") as of:
                 of.write(str(seg))
 
-        base_dst_dir = join(config.out_dir, "mono_label_round_seg")
+        base_dst_dir = join(config["out_dir"], "mono_label_round_seg")
         os.makedirs(base_dst_dir, exist_ok=True)
         for idx, seg in enumerate(base_segments):
             with open(join(base_dst_dir, f"{utt_id}_seg{idx}.lab"), "w") as of:

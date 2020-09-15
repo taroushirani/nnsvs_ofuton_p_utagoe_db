@@ -5,8 +5,12 @@ from os.path import join, basename, splitext
 from nnmnkwii.io import hts
 from fastdtw import fastdtw
 import sys
-import config
 from util import prep_ph2num, ph2numeric, fix_mono_lab_after_align
+from tqdm import tqdm
+
+import yaml
+with open('config.yaml', 'r') as yml:
+    config = yaml.load(yml, Loader=yaml.FullLoader)
 
 # Get rough alignment between
 # 1) mono-phone labels of singing voice database and
@@ -14,14 +18,14 @@ from util import prep_ph2num, ph2numeric, fix_mono_lab_after_align
 
 ph2num = prep_ph2num()
 
-sinsy_files = sorted(glob(join(config.out_dir, "sinsy_mono_round/*.lab")))
-mono_label_files = sorted(glob(join(config.out_dir, "mono_label_round/*.lab")))
+sinsy_files = sorted(glob(join(config["out_dir"], "sinsy_mono_round/*.lab")))
+mono_label_files = sorted(glob(join(config["out_dir"], "mono_label_round/*.lab")))
 
-dst_dir = join(config.out_dir, "mono_dtw")
+dst_dir = join(config["out_dir"], "mono_dtw")
 os.makedirs(dst_dir, exist_ok=True)
 
 excludes = []
-for (path1, path2) in zip(sinsy_files, mono_label_files):
+for (path1, path2) in tqdm(zip(sinsy_files, mono_label_files)):
     lab_sinsy = hts.load(path1)
     lab_mono_label = hts.load(path2)
     name = basename(path1)

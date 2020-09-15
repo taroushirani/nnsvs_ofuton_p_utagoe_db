@@ -2,8 +2,12 @@
 from os.path import join
 import jaconv
 import numpy as np
-import config
 from nnmnkwii.io import hts
+from tqdm import tqdm
+
+import yaml
+with open('config.yaml', 'r') as yml:
+    config = yaml.load(yml, Loader=yaml.FullLoader)
 
 def merge_sil(lab):
     N = len(lab)
@@ -146,13 +150,13 @@ def segment_labels(lab, strict=True, threshold=1.0, min_duration=5.0,
 
 def prep_ph2num():
     kiritan_phone_mapping = {}
-    with open(join(config.sinsy_dic, "japanese.table")) as f:
+    with open(join(config["sinsy_dic"], "japanese.table"), encoding="UTF-8") as f:
         for l in f:
             s = l.strip().split()
             key = jaconv.hira2kata(s[0])
             kiritan_phone_mapping[key] = s[1:]
     sinsy_phone_mapping = {}
-    with open(join(config.sinsy_dic, "japanese.utf_8.table")) as f:
+    with open(join(config["sinsy_dic"], "japanese.utf_8.table"), encoding="UTF-8") as f:
         for l in f:
             s = l.strip().split()
             key = jaconv.hira2kata(s[0])
