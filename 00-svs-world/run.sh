@@ -26,8 +26,8 @@ testsets=($dev_set $eval_set)
 
 dumpdir=dump
 
-dump_org_dir=$dumpdir/$spk/org
-dump_norm_dir=$dumpdir/$spk/norm
+dump_org_dir=$dumpdir/$config_spk/org
+dump_norm_dir=$dumpdir/$config_spk/norm
 
 stage=0
 stop_stage=0
@@ -35,7 +35,7 @@ stop_stage=0
 . $NNSVS_ROOT/utils/parse_options.sh || exit 1;
 
 # exp name
-if [ -z ${config_tag} ]; then
+if [ -z ${config_tag:=} ]; then
     expname=${config_spk}
 else
     expname=${config_spk}_${config_tag}
@@ -54,6 +54,7 @@ Please visit https://sites.google.com/view/oftn-utagoedb/%E3%83%9B%E3%83%BC%E3%8
 and read the term of services, and then download the singing voice database 
 manually.
 EOF
+	
     fi
 fi
 
@@ -125,7 +126,7 @@ if [ ${stage} -le 2 ] && [ ${stop_stage} -ge 2 ]; then
         data.dev.out_dir=$dump_norm_dir/$dev_set/out_timelag/ \
         model=timelag train.out_dir=$expdir/timelag \
         data.batch_size=$config_batch_size \
-        resume.checkpoint=$resume_checkpoint \
+        resume.checkpoint=$resume_checkpoint 
 fi
 
 if [ ${stage} -le 3 ] && [ ${stop_stage} -ge 3 ]; then
