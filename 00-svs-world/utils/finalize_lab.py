@@ -70,7 +70,7 @@ for base in tqdm(base_files):
     global_offset = int(round(global_offset / 50000) * 50000)
 
     # Apply offset correction only when there is a big gap
-    apply_offset_correction = np.abs(global_offset * 1e-7) > config["offset_correction_threshold"]
+    apply_offset_correction = np.abs(global_offset * 1e-7) > float(config["offset_correction_threshold"])
     if apply_offset_correction:
         print(f"{utt_id}: Global offset (in sec): {global_offset * 1e-7}")
 
@@ -121,10 +121,10 @@ for base in tqdm(base_files):
             note_idx = note_indices[idx]
             lag = np.abs(a - b) / 50000
             if _is_silence(lab_score.contexts[note_idx]):
-                if lag >= config["timelag_allowed_range_rest"][0] and lag <= config["timelag_allowed_range_rest"][1]:
+                if lag >= float(config["timelag_allowed_range_rest"][0]) and lag <= float(config["timelag_allowed_range_rest"][1]):
                     valid_note_indices.append(note_idx)
             else:
-                if lag >= config["timelag_allowed_range"][0] and lag <= config["timelag_allowed_range"][1]:
+                if lag >= float(config["timelag_allowed_range"][0]) and lag <= float(config["timelag_allowed_range"][1]):
                     valid_note_indices.append(note_idx)
 
         if len(valid_note_indices) < len(note_indices):
