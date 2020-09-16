@@ -50,7 +50,7 @@ stage -1: Downloading
 This recipe does not download OFTON_P_UTAGOE_DB.zip to
 provide you the opportunity to read the original license.
 
-Please visit https://sites.google.com/view/oftn-utagoedb/%E3%83%9B%E3%83%BC%E3%83%A0"
+Please visit https://sites.google.com/view/oftn-utagoedb/%E3%83%9B%E3%83%BC%E3%83%A0
 and read the term of services, and then download the singing voice database 
 manually.
 EOF
