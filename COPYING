@@ -1,8 +1,8 @@
-Almost all codes in this repository except files in "dic" are derived from kiritan_singing_extra[1] written by Ryuichi Yamamoto and released under the MIT license.
+Almost all codes in this repository except files in "dic" are derived from kiritan_singing[1] written by Ryuichi Yamamoto and released under the MIT license.
 
 The files in "dic" directory in each recipes are derived from sinsy[2] and released under the Modified BSD license. For detail, please see COPYING in each "dic" directory.
 
- 1. https://github.com/r9y9/kiritan_singing_extra
+ 1. https://github.com/r9y9/kiritan_singing
  2. http://sinsy.sourceforge.net/
 
 MIT License
