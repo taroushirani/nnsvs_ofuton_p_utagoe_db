@@ -181,7 +181,7 @@ if [ ${stage} -le 4 ] && [ ${stop_stage} -ge 4 ]; then
         data.batch_size=$batch_size \
         resume.checkpoint=$resume_checkpoint \
         model.stream_sizes=$acoustic_model_stream_sizes \
-        model.netG.params.out_dim=$acoustic_model_out_dim
+        model.netG.out_dim=$acoustic_model_out_dim
 fi
 
 
@@ -225,7 +225,6 @@ if [ ${stage} -le 6 ] && [ ${stop_stage} -ge 6 ]; then
             acoustic.in_scaler_path=$dump_norm_dir/in_acoustic_scaler.joblib \
             acoustic.out_scaler_path=$dump_norm_dir/out_acoustic_scaler.joblib \
             acoustic.model_yaml=$expdir/acoustic/model.yaml \
-            acoustic.stream_sizes=$acoustic_model_stream_sizes \
             utt_list=./data/list/$s.list \
             in_dir=data/acoustic/$input/ \
             out_dir=$expdir/synthesis/$s/latest/$input \
