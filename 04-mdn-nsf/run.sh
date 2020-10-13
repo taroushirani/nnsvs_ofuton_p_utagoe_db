@@ -29,9 +29,6 @@ dumpdir=dump
 dump_org_dir=$dumpdir/$config_spk/org
 dump_norm_dir=$dumpdir/$config_spk/norm
 
-nsf_save_model_dir=$expdir/nsf/train_outputs
-
-
 stage=0
 stop_stage=0
 
@@ -43,7 +40,9 @@ if [ -z ${config_tag:=} ]; then
 else
     expname=${config_spk}_${config_tag}
 fi
+
 expdir=exp/$expname
+nsf_save_model_dir=$expdir/nsf/train_outputs
 
 if [ ${stage} -le -1 ] && [ ${stop_stage} -ge -1 ]; then
     if [ ! -e $(eval echo $config_db_root) ]; then
