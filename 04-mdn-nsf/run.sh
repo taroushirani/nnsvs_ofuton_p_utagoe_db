@@ -194,6 +194,9 @@ if [ ${stage} -le 6 ] && [ ${stop_stage} -ge 6 ]; then
             else
                 ground_truth_duration=true
             fi
+	    if [ -e $nsf_save_model_dir/eval_utt_list.dic ]; then
+		rm $nsf_save_model_dir/eval_utt_list.dic
+	    fi
             xrun python bin/synthesis_nsf.py question_path=conf/jp_qst001_nnsvs.hed \
             timelag.checkpoint=$expdir/timelag/latest.pth \
             timelag.in_scaler_path=$dump_norm_dir/in_timelag_scaler.joblib \

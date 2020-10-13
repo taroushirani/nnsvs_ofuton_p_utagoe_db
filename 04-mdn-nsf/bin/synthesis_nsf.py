@@ -196,7 +196,7 @@ def synthesis_nsf(config, utt_list, input_dir, output_dir):
               'shuffle':  args.shuffle,
               'num_workers': args.num_workers}
 
-    nsf_settings = nii_dset.NIIDataSetLoader("synthesis",
+    test_set = nii_dset.NIIDataSetLoader("eval",
                                          utt_list, 
                                          [input_dir] * 3,
                                          config.nsf.model.input_exts, 
@@ -217,8 +217,8 @@ def synthesis_nsf(config, utt_list, input_dir, output_dir):
 
 
     # Initialize the model and loss function
-    model = nsf_model.Model(nsf_settings.get_in_dim(),
-                            nsf_settings.get_out_dim(), 
+    model = nsf_model.Model(test_set.get_in_dim(),
+                            test_set.get_out_dim(), 
                             args)
 
     if not args.trained_model:
@@ -234,7 +234,7 @@ def synthesis_nsf(config, utt_list, input_dir, output_dir):
 
     # do inference and output data
     nii_nn_wrapper.f_inference_wrapper(args, model, device,
-                                       nsf_settings, checkpoint)
+                                       test_set, checkpoint)
     
 @hydra.main(config_path="conf/synthesis_nsf/config.yaml")
 def my_app(config : DictConfig) -> None:
