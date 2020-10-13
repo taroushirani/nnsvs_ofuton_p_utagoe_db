@@ -29,6 +29,9 @@ dumpdir=dump
 dump_org_dir=$dumpdir/$config_spk/org
 dump_norm_dir=$dumpdir/$config_spk/norm
 
+nsf_save_model_dir=$expdir/nsf/train_outputs
+
+
 stage=0
 stop_stage=0
 
@@ -120,7 +123,8 @@ if [ ${stage} -le 2 ] && [ ${stop_stage} -ge 2 ]; then
     else
         resume_checkpoint=
     fi
-   xrun nnsvs-train data.train_no_dev.in_dir=$dump_norm_dir/$train_set/in_timelag/ \
+    xrun nnsvs-train --config-dir hydra/train --config-path config.yaml \
+	 data.train_no_dev.in_dir=$dump_norm_dir/$train_set/in_timelag/ \
         data.train_no_dev.out_dir=$dump_norm_dir/$train_set/out_timelag/ \
         data.dev.in_dir=$dump_norm_dir/$dev_set/in_timelag/ \
         data.dev.out_dir=$dump_norm_dir/$dev_set/out_timelag/ \
@@ -136,7 +140,8 @@ if [ ${stage} -le 3 ] && [ ${stop_stage} -ge 3 ]; then
     else
         resume_checkpoint=
     fi
-    xrun nnsvs-train data.train_no_dev.in_dir=$dump_norm_dir/$train_set/in_duration/ \
+    xrun nnsvs-train --config-dir hydra/train --config-path config.yaml \
+	 data.train_no_dev.in_dir=$dump_norm_dir/$train_set/in_duration/ \
         data.train_no_dev.out_dir=$dump_norm_dir/$train_set/out_duration/ \
         data.dev.in_dir=$dump_norm_dir/$dev_set/in_duration/ \
         data.dev.out_dir=$dump_norm_dir/$dev_set/out_duration/ \
@@ -153,7 +158,8 @@ if [ ${stage} -le 4 ] && [ ${stop_stage} -ge 4 ]; then
     else
         resume_checkpoint=
     fi
-    xrun nnsvs-train data.train_no_dev.in_dir=$dump_norm_dir/$train_set/in_acoustic/ \
+    xrun nnsvs-train --config-dir hydra/train --config-path config.yaml \
+	 data.train_no_dev.in_dir=$dump_norm_dir/$train_set/in_acoustic/ \
         data.train_no_dev.out_dir=$dump_norm_dir/$train_set/out_acoustic/ \
         data.dev.in_dir=$dump_norm_dir/$dev_set/in_acoustic/ \
         data.dev.out_dir=$dump_norm_dir/$dev_set/out_acoustic/ \
@@ -208,4 +214,86 @@ if [ ${stage} -le 6 ] && [ ${stop_stage} -ge 6 ]; then
             ground_truth_duration=$ground_truth_duration
         done
     done
+fi
+
+if [ ${stage} -le 7 ] && [ ${stop_stage} -ge 7 ]; then
+    if [ ! -e $config_nsf_root_dir ]; then
+	echo "stage 7: Downloading NSF"
+        mkdir -p downloads
+        cd downloads
+	git clone https://github.com/nii-yamagishilab/project-NN-Pytorch-scripts
+	cd $script_dir
+    fi
+fi
+
+if [ ${stage} -le 8 ] && [ ${stop_stage} -ge 8 ]; then
+    echo "stage 8: Data preparation for NSF"
+    out_dir=$expdir/nsf
+    mkdir -p $out_dir
+    for s in ${datasets[@]};
+    do
+        if [ $s = $eval_set ]; then
+	    xrun python bin/prepare_nsf_data.py in_dir=$dump_org_dir/$s/out_acoustic out_dir=$out_dir test_set=true
+        else
+	    xrun python bin/prepare_nsf_data.py in_dir=$dump_org_dir/$s/out_acoustic out_dir=$out_dir
+	fi
+    done
+fi
+
+if [ ${stage} -le 9 ] && [ ${stop_stage} -ge 9 ]; then
+    echo "stage 9: Training NSF model"
+    if [ ! -e $config_nsf_root_dir ]; then
+	echo "No NSF files found. Please set nsf_root_dir properly or run stage 7."
+	exit 1
+    fi
+    lr=0.00003
+    echo "learning_rate=$lr"
+    input_dirs=$expdir/nsf/input_dirs
+    output_dirs=$expdir/nsf/output_dirs
+    mkdir -p $output_dirs
+    mkdir -p $nsf_save_model_dir
+    xrun python bin/train_nsf.py \
+	 nsf_root_dir=$config_nsf_root_dir \
+	 nsf.args.epochs=200 \
+	 nsf.args.no_best_epochs=20 \
+	 nsf.args.lr=$lr \
+	 nsf.args.save_model_dir=$nsf_save_model_dir \
+	 nsf.args.trained_model=$config_nsf_pretrained_model \
+	 nsf.model.input_dirs=["$input_dirs","$input_dirs","$input_dirs"]\
+	 nsf.model.output_dirs=["$output_dirs"]
+
+    for lr in 0.00001 0.000006 0.000003 0.000001
+    do
+	echo "learning_rate=$lr"
+	xrun python bin/train_nsf.py \
+	     nsf_root_dir=$config_nsf_root_dir \
+	     nsf.args.epochs=200 \
+	     nsf.args.no_best_epochs=20 \
+	     nsf.args.lr=$lr \
+	     nsf.args.save_model_dir=$nsf_save_model_dir \
+	     nsf.args.trained_model=$expdir/nsf/train_outputs/trained_network.pt \
+	     nsf.model.input_dirs=["$input_dirs","$input_dirs","$input_dirs"]\
+	     nsf.model.output_dirs=["$output_dirs"]
+    done
+
+fi
+
+if [ ${stage} -le 10 ] && [ ${stop_stage} -ge 10 ]; then
+    echo "stage 10: Evaluating NSF model"
+    if [ ! -e $config_nsf_root_dir ]; then
+	echo "No NSF files found. Please set nsf_root_dir properly or run stage 7."
+	exit 1
+    fi
+
+    # for inference
+    test_input_dirs=$expdir/nsf/test_input_dirs
+    test_output_dirs=$expdir/nsf/test_output_dirs
+    mkdir -p $test_output_dirs
+    xrun python bin/train_nsf.py \
+	 nsf_root_dir=$config_nsf_root_dir \
+	 nsf.args.save_model_dir=$nsf_save_model_dir \
+	 nsf.args.inference=true \
+	 nsf.model.test_input_dirs=["$test_input_dirs","$test_input_dirs","$test_input_dirs"]\
+	 nsf.model.test_output_dirs=$test_output_dirs
+
 fi
