@@ -120,9 +120,6 @@ def dump_acoustic_features(config, device, label_path, question_path,
                                                 config.acoustic.post_filter, config.sample_rate,
                                                 config.frame_period,
                                                 config.acoustic.relative_f0)
-    print(f"mgc.shape: {mgc.shape}")
-    print(f"f0.shape: {f0.shape}")
-    print(f"bap.shape: {bap.shape}")
     # Save mgc/f0/bap
     with open(join(out_dir, utt_id + ".f0"), "wb") as f:
         f0.astype(np.float32).tofile(f)
