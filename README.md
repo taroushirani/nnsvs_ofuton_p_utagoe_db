@@ -1,7 +1,12 @@
 # nnsvs_ofuton_p_utagoe_db
 
-[NNSVS](https://github.com/r9y9/nnsvs) recipe of OFUTON_P singing voice database (49 songs, 46 original songs + 3 key-changed songs). 
+[NNSVS](https://github.com/r9y9/nnsvs) recipe of OFUTON P Utagoe database (49 songs, 46 original songs + 3 key-changed songs). 
 Almost all codes are derived from [kiritan_singing](https://github.com/r9y9/kiritan_singing).
+
+## Important Notice
+**The recipe of Ofuton P Utagoe database is merged into NNSVS repository on 04 Nov 2020.  Please use the official one.**
+
+This repository is maintained only for the experimental purpose.
 
 ## Requirements
 - nnsvs
